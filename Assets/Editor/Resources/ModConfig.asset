@@ -14,8 +14,10 @@ MonoBehaviour:
   id: maskedMorse
   title: Masked Morse
   author: Vincology
-  description: Use three hidden Morse letters being transmitted in the grid to locate
-    three valid cells in the grid.
+  description: "Time ticks in more than one direction.\n\r\nUse three hidden Morse
+    letters being transmitted in the grid to locate three valid cells.\n\r\nModule
+    by Vincology\r, Idea by diffuse\n\r\nModule ID: maskedMorse\nManual can be found
+    at ktane.timwi.de"
   version: 1.0.0
   outputFolder: build
-  previewImage: {fileID: 0}
+  previewImage: {fileID: 2800000, guid: 9775de4babbee1b448aba3e4c8172f1d, type: 3}
