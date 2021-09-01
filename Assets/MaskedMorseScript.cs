@@ -90,7 +90,7 @@ public class MaskedMorseScript : MonoBehaviour {
 
         for (int i = 0; i < 3; i++) {
             chosenLines.Add(lines.Shuffle()[0]);
-            Debug.LogFormat("[Marquis Morse #{0}] The {1} character is {2} in {3} {4}.", moduleId, baseColors[i], table[correctLine[colorIndices[i]]],  
+            Debug.LogFormat("[Masked Morse #{0}] The {1} character is {2} in {3} {4}.", moduleId, baseColors[i], table[correctLine[colorIndices[i]]],  
                 chosenLines[i][1] - chosenLines[i][0] == 1 ? "row" : "column",
                 chosenLines[i][1] - chosenLines[i][0] == 1 ? chosenLines[i][0] / 6 + 1 : chosenLines[i][0] + 1);
             lines.RemoveAt(0);
@@ -105,12 +105,12 @@ public class MaskedMorseScript : MonoBehaviour {
             marqueeLights[i] = newLights;
         }
         
-        Debug.LogFormat("[Marquis Morse #{0}] The correct presses are {1}, {2}, and {3}.", moduleId,
+        Debug.LogFormat("[Masked Morse #{0}] The correct presses are {1}, {2}, and {3}.", moduleId,
             ToCoordinate(correctPresses[0]), ToCoordinate(correctPresses[1]), ToCoordinate(correctPresses[2]));
     }
 
     private void Solve() {
-        Debug.LogFormat("[Marquis Morse #{0}] Module solved.", moduleId);
+        Debug.LogFormat("[Masked Morse #{0}] Module solved.", moduleId);
         Module.HandlePass();
         speed = 0;
         if (coroutine != null) StopCoroutine(coroutine);
@@ -230,17 +230,17 @@ public class MaskedMorseScript : MonoBehaviour {
         return delegate {
             gridButtons[i].AddInteractionPunch(.1f);
             if (correctPresses.Contains(i) && !pressesList[correctPresses.IndexOf(i)]) {
-                Debug.LogFormat("[Marquis Morse #{0}] {1} was pressed. That was correct.", moduleId, ToCoordinate(i));
+                Debug.LogFormat("[Masked Morse #{0}] {1} was pressed. That was correct.", moduleId, ToCoordinate(i));
                 StartCoroutine(MoveAnswerBase(correctPresses.IndexOf(i)));
                 pressesList[correctPresses.IndexOf(i)] = true;
                 Audio.PlaySoundAtTransform("correct" + pressesList.Count(x => x), Module.transform);
                 if (pressesList.All(x => x)) Solve();
             }
             else if (correctPresses.Contains(i)) {
-                Debug.LogFormat("[Marquis Morse #{0}] {1} was pressed. That was already correct.", moduleId, ToCoordinate(i));
+                Debug.LogFormat("[MaskedMorse #{0}] {1} was pressed. That was already correct.", moduleId, ToCoordinate(i));
             }
             else {
-                Debug.LogFormat("[Marquis Morse #{0}] {1} was pressed. That was incorrect.", moduleId, ToCoordinate(i));
+                Debug.LogFormat("[Masked Morse #{0}] {1} was pressed. That was incorrect.", moduleId, ToCoordinate(i));
                 Module.HandleStrike();
             }
             return false;
