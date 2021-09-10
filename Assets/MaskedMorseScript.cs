@@ -59,7 +59,7 @@ public class MaskedMorseScript : MonoBehaviour {
     private bool moduleSolved;
 
     void Awake () {
-        moduleId = moduleIdCounter++; // version 1.0.0
+        moduleId = moduleIdCounter++; // version 1.0.2
     }
 
     void Start () {
@@ -112,6 +112,7 @@ public class MaskedMorseScript : MonoBehaviour {
     private void Solve() {
         Debug.LogFormat("[Masked Morse #{0}] Module solved.", moduleId);
         Module.HandlePass();
+        moduleSolved = true;
         speed = 0;
         if (coroutine != null) StopCoroutine(coroutine);
         for (int i = 0; i < 3; i++) answerColors[i].material.color = Color.black;
@@ -229,6 +230,8 @@ public class MaskedMorseScript : MonoBehaviour {
     private KMSelectable.OnInteractHandler GridPress(int i) {
         return delegate {
             gridButtons[i].AddInteractionPunch(.1f);
+
+            if (moduleSolved) return false;
             if (correctPresses.Contains(i) && !pressesList[correctPresses.IndexOf(i)]) {
                 Debug.LogFormat("[Masked Morse #{0}] {1} was pressed. That was correct.", moduleId, ToCoordinate(i));
                 StartCoroutine(MoveAnswerBase(correctPresses.IndexOf(i)));
@@ -251,6 +254,8 @@ public class MaskedMorseScript : MonoBehaviour {
     private KMSelectable.OnInteractHandler SpeedPress(bool up) {
         return delegate {
             (up ? speedButtonUp : speedButtonDown).AddInteractionPunch(.1f);
+            
+            if (moduleSolved) return false; // just in case they somehow get inside the base
             Audio.PlayGameSoundAtTransform(KMSoundOverride.SoundEffect.ButtonPress, (up ? speedButtonUp : speedButtonDown).transform);
             speed = up ? Math.Min(5, speed + 1) : Math.Max(0, speed - 1);
             speedText.text = speed.ToString();
