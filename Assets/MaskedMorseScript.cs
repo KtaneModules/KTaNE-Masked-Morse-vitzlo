@@ -59,7 +59,7 @@ public class MaskedMorseScript : MonoBehaviour {
     private bool moduleSolved;
 
     void Awake () {
-        moduleId = moduleIdCounter++; // version 1.0.2
+        moduleId = moduleIdCounter++; // version 1.0.3
     }
 
     void Start () {
@@ -240,7 +240,7 @@ public class MaskedMorseScript : MonoBehaviour {
                 if (pressesList.All(x => x)) Solve();
             }
             else if (correctPresses.Contains(i)) {
-                Debug.LogFormat("[MaskedMorse #{0}] {1} was pressed. That was already correct.", moduleId, ToCoordinate(i));
+                Debug.LogFormat("[Masked Morse #{0}] {1} was pressed. That was already correct.", moduleId, ToCoordinate(i));
             }
             else {
                 Debug.LogFormat("[Masked Morse #{0}] {1} was pressed. That was incorrect.", moduleId, ToCoordinate(i));
@@ -305,18 +305,20 @@ public class MaskedMorseScript : MonoBehaviour {
         List<string> parameters = command.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries).ToList();
 
         int newSpeed;
-        if (parameters.Count >= 4) yield return "sendtochaterror Too many commands.";
-        if (parameters.Count == 2 && parameters[0] == "SPEED" && Int32.TryParse(parameters[1], out newSpeed) && newSpeed >= 0 && newSpeed < 6) {
+        if (parameters.Count > 3) yield return "sendtochaterror Too many commands.";
+        else if (parameters.Count == 2 && parameters[0] == "SPEED" && Int32.TryParse(parameters[1], out newSpeed) && newSpeed >= 0 && newSpeed < 6) {
             int loopTime = Math.Abs(newSpeed - speed);
             for (int i = 0; i < loopTime; i++) {
-                Debug.Log("speed = " + speed);
-                Debug.Log("new speed = "+ newSpeed);
                 (newSpeed > speed ? speedButtonUp : speedButtonDown).OnInteract();
             }
         }
         else if (parameters.All(s =>
             s.Length == 2 && headers.Substring(0, 6).Contains(s[0]) && headers.Substring(6, 6).Contains(s[1]))) {
-            foreach (string s in parameters) gridButtons[headers.IndexOf(s[0]) + 6 * (headers.IndexOf(s[1]) - 6)].OnInteract();
+            yield return null;
+            foreach (string s in parameters) {
+                gridButtons[headers.IndexOf(s[0]) + 6 * (headers.IndexOf(s[1]) - 6)].OnInteract();
+                yield return new WaitForSeconds(0.678f);
+            }
         }
         else yield return "sendtochaterror Invalid command.";
         yield return null;
